@@ -7,28 +7,26 @@ class Crane{
     whole;
     
     // shape constants
-    static bodyCenterX = 400;
-    static bodyCenterY = 150;
     static torsoHeight = 300;
     static torsoWidth = 60;
     static armThick = 10;
     static armHalfLength = 100;
     static armDensity = 0.001 * 10; // densityはデフォルトが0.001。
 
-    createTorso(){
-        this.torso = Bodies.rectangle(Crane.bodyCenterX, Crane.bodyCenterY, Crane.torsoWidth,Crane.torsoHeight, {isStatic:true});
+    createTorso(torsoCenterX, torsoCenterY){
+        this.torso = Bodies.rectangle(torsoCenterX, torsoCenterY, Crane.torsoWidth,Crane.torsoHeight, {isStatic:true});
         this.torso.collisionFilter.group = -1;// armと干渉しないように
         this.torso.render.fillStyle = 'orange';
     }
 
-    static createArm(isLeft){
+    static createArm(isLeft, torsoCenterX, torsoCenterY){
         let offsetX = Crane.torsoWidth / 2 - Crane.armThick + Crane.armHalfLength / 2;
         if (isLeft){ offsetX *= -1; }
-        const armPart1 = Bodies.rectangle(Crane.bodyCenterX + offsetX, Crane.torsoHeight - Crane.armThick / 2, Crane.armHalfLength, Crane.armThick, {isStatic:false});
+        const armPart1 = Bodies.rectangle(torsoCenterX + offsetX, torsoCenterY + Crane.torsoHeight / 2 - Crane.armThick / 2, Crane.armHalfLength, Crane.armThick, {isStatic:false});
         Body.setDensity(armPart1, Crane.armDensity);
         offsetX = Crane.torsoWidth / 2 + Crane.armHalfLength - Crane.armThick;
         if (isLeft){ offsetX *= -1; }
-        const armPart2 = Bodies.rectangle(Crane.bodyCenterX + offsetX, Crane.torsoHeight - Crane.armThick + Crane.armHalfLength / 2, Crane.armThick, Crane.armHalfLength, {isStatic:false});
+        const armPart2 = Bodies.rectangle(torsoCenterX + offsetX, torsoCenterY + Crane.torsoHeight / 2 - Crane.armThick + Crane.armHalfLength / 2, Crane.armThick, Crane.armHalfLength, {isStatic:false});
         Body.setDensity(armPart2, Crane.armDensity);
         let arm = Body.create({ parts: [armPart1, armPart2]});
         arm.collisionFilter.group = -1;
@@ -62,20 +60,20 @@ class Crane{
         });
     }
 
-    createStopper() {
-        const stopper = Bodies.rectangle(Crane.bodyCenterX, Crane.bodyCenterY + Crane.torsoHeight / 2 - 20, Crane.torsoWidth * 2, 10, {isStatic:true});
+    createStopper(torsoCenterX, torsoCenterY) {
+        const stopper = Bodies.rectangle(torsoCenterX, torsoCenterY + Crane.torsoHeight / 2 - 20, Crane.torsoWidth * 2, 10, {isStatic:true});
         stopper.render.fillStyle = 'orange';
         return stopper;
     }
 
-    constructor(){
-        this.createTorso();
-        this.armLeft = Crane.createArm(true);
-        this.armRight = Crane.createArm(false);
+    constructor(torsoCenterX, torsoCenterY){
+        this.createTorso(torsoCenterX, torsoCenterY);
+        this.armLeft = Crane.createArm(true, torsoCenterX, torsoCenterY);
+        this.armRight = Crane.createArm(false, torsoCenterX, torsoCenterY);
 
         const constraintLeftArm = this.createArmConstraint(this.armLeft, true);
         const constraintRightArm = this.createArmConstraint(this.armRight, false);
-        const stopper = this.createStopper();
+        const stopper = this.createStopper(torsoCenterX, torsoCenterY);
 
         this.torsoComposite = Composite.create();
         Composite.add(this.torsoComposite, [this.torso, stopper]);

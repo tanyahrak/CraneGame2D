@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "file:///G:/MyWebSite/crane2D/index.html",
+            "url": "file:///G:/MyWebSite/CraneGame2D/index.html",
             "webRoot": "${workspaceFolder}"
         }
     ]
