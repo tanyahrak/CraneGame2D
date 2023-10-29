@@ -21,8 +21,8 @@ const iRender = Render.create({
     element: document.body,
     engine: iEngine,
     options:{
-        width:800,
-        height:800,
+        width:850,
+        height:500,
         wireframes:false,
         background:"white"
     }

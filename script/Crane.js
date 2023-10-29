@@ -11,7 +11,7 @@ class Crane{
     static torsoWidth = 60;
     static armThick = 10;
     static armHalfLength = 100;
-    static armDensity = 0.001 * 10; // densityはデフォルトが0.001。
+    static armDensity = 0.001 * 3; // densityはデフォルトが0.001。
 
     createTorso(torsoCenterX, torsoCenterY){
         this.torso = Bodies.rectangle(torsoCenterX, torsoCenterY, Crane.torsoWidth,Crane.torsoHeight, {isStatic:true});
